@@ -2,7 +2,7 @@ import imp
 from django.shortcuts import render
 from .forms import SignupForm
 from django.contrib.auth import login,authenticate
-
+from .models import *
 
 # Create your views here.
 def home(request):
@@ -13,6 +13,14 @@ def aboutuspage(request):
 
 def servicepage(request):
     return render(request, 'services.html')
+
+def product(request):
+    products = Product.objects.all()
+    context = {'products':products}
+    return render(request, 'products.html', context) 
+
+def renting(request):
+    return render(request, 'renting.html'),
 
 def signup(request):
     if request.method=='POST':
