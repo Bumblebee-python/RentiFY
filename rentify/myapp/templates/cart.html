@@ -1,0 +1,36 @@
+{% extends 'base.html'%}
+
+{% block body %}
+{% load static %}
+<table style="padding: 30px, text-align: left;">
+    <tr>
+<div class="box-element">
+    <div class="cart-row">
+       <th> <div style="flex:2"></div>
+        <th><div style="flex:2"><strong>Item</strong></div></th>
+        <th><div style="flex:1"><strong>Price</strong></div></th>
+        <th><div style="flex:1"><strong>Quantity</strong></div></th>
+        <th><div style="flex:1"><strong>Total</strong></div></th>
+    </div></tr>
+    {% if user.is_authenticated%}
+    
+    {% for item in items %}
+    <tr><div class="cart-row">
+        <td><div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"style="width: 150px;"></div></td>
+        <td><div style="flex:2"><p>{{item.product.name}}</p></div></td>
+        <td><div style="flex:1"><p>₹{{item.product.price|floatformat:2}}</p></div></td>
+        <td><div style="flex:1">
+            <p class="quantity">x{{item.quantity}}</p>
+            <div class="quantity">
+                <button style='font-size:24px'><i class='far fa-arrow-alt-circle-down'></i></button>
+                <button style='font-size:24px'><i class='far fa-arrow-alt-circle-down'></i></button>
+        </div></td>
+        <td><div style="flex:1"><p>₹400</p></div></td>
+        {% endfor %}
+        {% endif %}
+    </table>
+</div>
+
+
+
+{% endblock body %}

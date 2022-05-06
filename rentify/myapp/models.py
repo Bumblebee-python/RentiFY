@@ -12,35 +12,42 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
-class Customer(models.Model):
-    #user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, on_delete=models.CASCADE)
-    Fname = models.CharField(max_length=200, null=True)
-    Lname = models.CharField(max_length=200, null=True)
-    email = models.CharField(max_length= 200)
-    phone = models.CharField(max_length=10)
-    address = models.CharField(max_length=200)
-    
 
 
-    def __str__(self): # -> str:
-        return self.email
 
 class Product(models.Model):
-	name = models.CharField(max_length=200)
-	price = models.FloatField()
-	available = models.BooleanField(default=False,null=True, blank=True)
-	image = models.ImageField(null=True, blank=True)
+    name = models.CharField(max_length=200)
+    P_TYPE_CHOICES= [
+    ('SW', 'Software'),
+    ('HW', 'Hardware'),
+    ]
+    p_type = models.CharField(
+        max_length=2,
+        choices=P_TYPE_CHOICES,
+        default= '',
+null=False, blank=False 
+	
+    )
+    
+    m_price = models.FloatField()
+    available = models.BooleanField(default=False, null=True, blank = True)
+    image = models.ImageField(null=True, blank=False)
+    description = models.TextField(default = False, max_length=800)
+    rent_price = models.FloatField(default=False)
 
-	def __str__(self):
-		return self.name
+    def __str__(self):
+        return str(self.name)
 
-	@property
-	def imageURL(self):
-		try:
-			url = self.image.url
-		except:
-			url = ''
-		return url
+    @property
+
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ""
+        return url
+
+
 
 #class Packages():
 
@@ -53,21 +60,30 @@ class Product(models.Model):
 #class Rent():
 
 
-class Payment(models.Model):
-    transaction_id = models.CharField(max_length=200, null=True)
-
-
-
-
-
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
-    date_ordered = models.DateTimeField
+   # customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    date_ordered = models.DateTimeField(auto_now=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
-    transaction_id = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True, blank=True)
     #image
     def __str__(self):
-        return str(self.id)
+        return str(self.date_ordered)
+
+
+
+class Payment(models.Model):
+    #customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    transaction_id = models.CharField(max_length=200, null=True)
+    transaction_amt = models.FloatField(null=True)
+    pay_date = models.DateTimeField(auto_now=True)
+    pay_status = models.BooleanField(default=False,null=True, blank=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    
+    
+
+
+
 
 
 class OrderItem(models.Model):
@@ -76,17 +92,10 @@ class OrderItem(models.Model):
     quantity = models.IntegerField(default=0, null= True, blank= True)
     date_added = models.DateTimeField(auto_now_add=True)
 
-class ShippingAddress(models.Model):
-    #customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
-    order = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
-    address = models.CharField(max_length=200, null=True)
-    city = models.CharField(max_length=200, null=True)
-    state = models.CharField(max_length=200, null=True)
-    pincode = models.CharField(max_length=200, null=True)
-    date_added = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
-        return self.address
+        return self.order
 #class Refund():
 
 
